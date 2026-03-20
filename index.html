@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TTT Server Loading Screen</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg1: #0b1020;
+      --bg2: #121a30;
+      --card: rgba(255,255,255,0.08);
+      --line: rgba(255,255,255,0.14);
+      --text: #f4f7ff;
+      --muted: #b9c3de;
+      --accent: #7c5cff;
+      --accent-2: #2dd4bf;
+      --danger: #ff6b81;
+      --gold: #ffd166;
+      --shadow: 0 20px 60px rgba(0,0,0,0.35);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: 'Inter', system-ui, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 15% 20%, rgba(124,92,255,.24), transparent 28%),
+        radial-gradient(circle at 80% 10%, rgba(45,212,191,.18), transparent 24%),
+        radial-gradient(circle at 80% 80%, rgba(255,107,129,.12), transparent 18%),
+        linear-gradient(135deg, var(--bg1), var(--bg2));
+      overflow: hidden;
+    }
+
+    .noise,
+    .grid,
+    .glow { position: fixed; inset: 0; pointer-events: none; }
+    .grid {
+      background-image:
+        linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+      background-size: 32px 32px;
+      mask-image: radial-gradient(circle at center, black 40%, transparent 85%);
+    }
+    .glow::before,
+    .glow::after {
+      content: "";
+      position: absolute;
+      width: 34rem;
+      height: 34rem;
+      border-radius: 999px;
+      filter: blur(80px);
+      opacity: .12;
+      animation: float 12s ease-in-out infinite;
+    }
+    .glow::before {
+      background: var(--accent);
+      left: -8rem;
+      top: -10rem;
+    }
+    .glow::after {
+      background: var(--accent-2);
+      right: -10rem;
+      bottom: -8rem;
+      animation-delay: -4s;
+    }
+
+    @keyframes float {
+      0%,100% { transform: translateY(0) translateX(0) scale(1); }
+      50% { transform: translateY(2rem) translateX(1rem) scale(1.08); }
+    }
+
+    .wrap {
+      position: relative;
+      z-index: 2;
+      min-height: 100%;
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 24px;
+      padding: 32px;
+    }
+
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+    }
+
+    .left {
+      padding: 36px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: calc(100vh - 64px);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: 14px;
+      width: fit-content;
+      margin-bottom: 18px;
+    }
+
+    .pulse {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: var(--accent-2);
+      box-shadow: 0 0 0 0 rgba(45,212,191,.65);
+      animation: pulse 1.8s infinite;
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(45,212,191,.65); }
+      70% { box-shadow: 0 0 0 16px rgba(45,212,191,0); }
+      100% { box-shadow: 0 0 0 0 rgba(45,212,191,0); }
+    }
+
+    h1 {
+      font-size: clamp(42px, 5vw, 78px);
+      line-height: .96;
+      letter-spacing: -0.04em;
+      margin: 0 0 18px;
+      max-width: 10ch;
+    }
+
+    .gradient {
+      background: linear-gradient(90deg, #ffffff 0%, #d8d1ff 40%, #8ff7ea 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .lead {
+      color: var(--muted);
+      font-size: clamp(16px, 1.6vw, 20px);
+      line-height: 1.6;
+      max-width: 62ch;
+      margin: 0 0 24px;
+    }
+
+    .cta-row {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+
+    .pill {
+      padding: 12px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .loading-box {
+      margin-top: 28px;
+      padding: 18px;
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(7,10,20,.35);
+    }
+
+    .loading-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 12px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .bar {
+      width: 100%;
+      height: 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .bar > span {
+      display: block;
+      height: 100%;
+      width: 68%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      border-radius: inherit;
+      box-shadow: 0 0 24px rgba(124,92,255,.35);
+      animation: load 3.2s ease-in-out infinite alternate;
+    }
+
+    @keyframes load {
+      from { width: 22%; }
+      to { width: 84%; }
+    }
+
+    .tip {
+      margin-top: 12px;
+      color: #e4ebff;
+      font-size: 14px;
+    }
+
+    .footer-note {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      margin-top: 24px;
+      color: var(--muted);
+      font-size: 13px;
+      flex-wrap: wrap;
+    }
+
+    .right {
+      display: grid;
+      grid-template-rows: 1fr auto;
+      gap: 24px;
+      min-height: calc(100vh - 64px);
+    }
+
+    .hero-card {
+      padding: 28px;
+      display: grid;
+      grid-template-rows: auto auto 1fr;
+      gap: 18px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::after {
+      content: "MAXWELL MODE";
+      position: absolute;
+      right: -28px;
+      top: 26px;
+      transform: rotate(12deg);
+      font-weight: 900;
+      letter-spacing: .18em;
+      font-size: 12px;
+      color: rgba(255,255,255,.08);
+    }
+
+    .server-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .logo {
+      width: 68px;
+      height: 68px;
+      border-radius: 20px;
+      display: grid;
+      place-items: center;
+      font-size: 28px;
+      background: linear-gradient(135deg, rgba(124,92,255,.9), rgba(45,212,191,.8));
+      box-shadow: 0 18px 32px rgba(0,0,0,.24);
+      flex: 0 0 auto;
+    }
+
+    .server-name {
+      font-size: 26px;
+      font-weight: 900;
+      line-height: 1.05;
+      margin: 0;
+    }
+
+    .server-sub {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    .stat {
+      padding: 18px;
+      border-radius: 22px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.09);
+    }
+
+    .stat .num {
+      font-size: 28px;
+      font-weight: 900;
+      margin-bottom: 6px;
+    }
+
+    .stat .label {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    .feature {
+      padding: 18px;
+      border-radius: 22px;
+      background: rgba(255,255,255,0.045);
+      border: 1px solid rgba(255,255,255,0.09);
+    }
+
+    .feature b {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 16px;
+    }
+
+    .feature span {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .rules {
+      padding: 24px;
+    }
+
+    .rules h2 {
+      margin: 0 0 14px;
+      font-size: 22px;
+    }
+
+    .rule-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .rule {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .rule .icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      background: rgba(255,255,255,0.08);
+      flex: 0 0 auto;
+    }
+
+    .rule strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 14px;
+    }
+
+    .rule p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .accent { color: var(--gold); }
+    .danger { color: #ff9fb1; }
+
+    @media (max-width: 1100px) {
+      body { overflow: auto; }
+      .wrap {
+        grid-template-columns: 1fr;
+        padding: 18px;
+      }
+      .left, .right {
+        min-height: auto;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .left, .hero-card, .rules { padding: 20px; }
+      .stats, .feature-grid { grid-template-columns: 1fr; }
+      h1 { max-width: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="grid"></div>
+  <div class="glow"></div>
+
+  <main class="wrap">
+    <section class="panel left">
+      <div>
+        <div class="eyebrow"><span class="pulse"></span> GMod TTT • Custom Content • Jugend-Slang Vibe</div>
+        <h1>Du Kleiner Go Digga,<br><span class="gradient">willkommen auf unserem kranken TTT-Server!</span></h1>
+        <p class="lead">
+          Habibi, hier gibt’s nicht nur Standard-Content. Dich erwarten <b>Custom CS:GO Messer</b>,
+          <b>Minecraft 1.16 Waffen</b>, eigene <b>Schusswaffen</b>, viele <b>Playermodels</b>,
+          dein <b>eigener Minecraft-Skin</b>, Bonus-Items wie <b>Vapes &amp; Zigaretten</b>,
+          ein <b>Auto für wahre Gs</b> und natürlich die legendäre <b>MAXWELL Meme Katze</b>.
+        </p>
+
+        <div class="cta-row">
+          <div class="pill">🔪 Custom Messer</div>
+          <div class="pill">⛏️ Minecraft Vibe</div>
+          <div class="pill">🚗 Auto nur für Gs</div>
+          <div class="pill">🐱 Maxwell Energy</div>
+        </div>
+
+        <div class="loading-box">
+          <div class="loading-head">
+            <span>Ladescreen aktiv … Map, Models und Dikka-Vibe werden geladen</span>
+            <span id="percent">68%</span>
+          </div>
+          <div class="bar"><span></span></div>
+          <div class="tip" id="tip">Tipp: Kein Random KOS, sonst Ersatzbank, Dikka.</div>
+        </div>
+      </div>
+
+      <div class="footer-note">
+        <span>TTT mit Chaos, Style und Ehrenkodex.</span>
+        <span>Design-Datei erstellt als eigenständiger HTML-Ladescreen.</span>
+      </div>
+    </section>
+
+    <section class="right">
+      <div class="panel hero-card">
+        <div class="server-card">
+          <div class="logo">🎮</div>
+          <div>
+            <p class="server-name">TTT Habibi<br>Loading Screen</p>
+            <div class="server-sub">Viele coole Maps • Custom Models • no cap komplett wild</div>
+          </div>
+        </div>
+
+        <div class="stats">
+          <div class="stat">
+            <div class="num">1.16</div>
+            <div class="label">Minecraft-Waffen-Vibe direkt im TTT, komplett anders als Standard.</div>
+          </div>
+          <div class="stat">
+            <div class="num">MAXWELL</div>
+            <div class="label">Meme-Katzen-Energie für maximal goofy Stimmung beim Laden.</div>
+          </div>
+        </div>
+
+        <div class="feature-grid">
+          <div class="feature">
+            <b>Custom Arsenal</b>
+            <span>CS:GO Messer, eigene Schusswaffen und Minecraft-Content für extra Flavor.</span>
+          </div>
+          <div class="feature">
+            <b>Player Style</b>
+            <span>Viele Playermodels und sogar dein eigener Minecraft-Skin für den Flex.</span>
+          </div>
+          <div class="feature">
+            <b>Bonus Items</b>
+            <span>Vapes, Zigaretten und anderer Quatsch für den Meme- und Roleplay-Vibe.</span>
+          </div>
+          <div class="feature">
+            <b>True G Mobility</b>
+            <span>Ja, es gibt ein Auto Habub — aber das dürfen nur wahre Gs benutzen.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel rules">
+        <h2>Server Ehrenkodex</h2>
+        <div class="rule-list">
+          <div class="rule">
+            <div class="icon">⚠️</div>
+            <div>
+              <strong>Keine Unschuldigen zum Spaß verletzen</strong>
+              <p>Wer Unschuldige nur zum Spaß hittet, ist <span class="danger">kein G</span> und muss sozial Stunden leisten.</p>
+            </div>
+          </div>
+          <div class="rule">
+            <div class="icon">👀</div>
+            <div>
+              <strong>Kein Random KOS</strong>
+              <p>Kill on Sight ohne Grund? Direkt <span class="accent">Ersatzbank</span>, Kleiner Go Digga.</p>
+            </div>
+          </div>
+          <div class="rule">
+            <div class="icon">💥</div>
+            <div>
+              <strong>Kein RDM</strong>
+              <p>Random Deathmatch gibt’s hier nicht — sonst droht amtliche <span class="danger">Popohaue</span>.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const tips = [
+      'Tipp: Kein Random KOS, sonst Ersatzbank, Dikka.',
+      'Tipp: RDM ist nicht fresh — sonst gibt\'s Popohaue, Kleiner.',
+      'Tipp: Das Auto dürfen nur wahre Gs benutzen, Habibi.',
+      'Tipp: Wer Unschuldige trollt, ist kein G und macht sozial Stunden.',
+      'Tipp: Maxwell ist nicht nur Deko — das ist Aura.'
+    ];
+
+    const percents = ['24%', '39%', '52%', '68%', '77%', '84%'];
+    let tipIndex = 0;
+    let percentIndex = 0;
+    const tipEl = document.getElementById('tip');
+    const percentEl = document.getElementById('percent');
+
+    setInterval(() => {
+      tipIndex = (tipIndex + 1) % tips.length;
+      tipEl.textContent = tips[tipIndex];
+    }, 2800);
+
+    setInterval(() => {
+      percentIndex = (percentIndex + 1) % percents.length;
+      percentEl.textContent = percents[percentIndex];
+    }, 1400);
+  </script>
+</body>
+</html>
