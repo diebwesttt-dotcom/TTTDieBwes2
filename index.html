@@ -525,7 +525,7 @@
       box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
     }
 
-    .video-player video {
+    .video-player img {
       width: 100%;
       height: 100%;
       object-fit: cover;
@@ -762,21 +762,27 @@
         </div>
 
 <div style="margin-top:18px;">
-  <a href="https://discord.gg/h6bH52eS5Z" target="_blank" style="
-    display:inline-flex;
-    align-items:center;
-    gap:10px;
-    padding:12px 18px;
-    border-radius:999px;
-    background: linear-gradient(135deg, #5865F2, #7289DA);
-    color:white;
-    font-weight:700;
-    text-decoration:none;
-    box-shadow:0 10px 30px rgba(0,0,0,.3);
-    transition: transform .2s ease, box-shadow .2s ease;
-  " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'"><svg class="discord-logo" viewBox="0 0 127.14 96.36" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+  
+
+<a href="javascript:void(0)" onclick="openDiscord()" style="
+display:inline-flex;
+align-items:center;
+gap:10px;
+padding:12px 18px;
+border-radius:999px;
+background: linear-gradient(135deg, #5865F2, #7289DA);
+color:white;
+font-weight:700;
+text-decoration:none;
+box-shadow:0 10px 30px rgba(0,0,0,.3);
+transition: transform .2s ease, box-shadow .2s ease;
+" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+<svg class="discord-logo" viewBox="0 0 127.14 96.36" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
   <path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0,72.06,72.06,0,0,0,78,7.1a97.68,97.68,0,0,0-29.93,0A72.37,72.37,0,0,0,44.6,0,105.89,105.89,0,0,0,18.36,8.07C1.58,33.75-2.3,58.8.61,83.5A105.73,105.73,0,0,0,32.71,96.36a77.7,77.7,0,0,0,6.7-10.9,68.42,68.42,0,0,1-10.53-5.05c.89-.65,1.75-1.33,2.57-2A75.57,75.57,0,0,0,95.7,78.4c.83.68,1.69,1.36,2.58,2a68.68,68.68,0,0,1-10.54,5.05,77.2,77.2,0,0,0,6.7,10.9A105.25,105.25,0,0,0,126.54,83.5C130,55.14,120.8,30.33,107.7,8.07ZM42.45,65.69c-5.9,0-10.74-5.41-10.74-12.07s4.74-12.07,10.74-12.07S53.2,47,53.19,53.62,48.35,65.69,42.45,65.69Zm42.24,0c-5.9,0-10.73-5.41-10.73-12.07S78.8,41.55,84.69,41.55s10.74,5.41,10.74,12.07S90.6,65.69,84.69,65.69Z"/>
-</svg> Joint unserem Discord Server</a>
+</svg> Discord joinen = Aura +100
+</a>
+
+
 </div>
 
 
@@ -824,10 +830,7 @@
             </div>
             <span class="note"> <b></b> </span>
           
-<div style="display:flex;align-items:center;gap:8px;margin-top:8px;">
-  <span style="font-size:12px;color:#b7c2e2;">🔊</span>
-  <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.3" style="width:120px;">
-</div>
+
 
         </div>
       </div>
@@ -850,7 +853,7 @@
 
         <div class="video-shell">
           <div class="video-player">
-            <video id="serverVideo" autoplay playsinline preload="auto"></video>
+            <img id="serverImage" alt="Server media" />
             <div class="video-overlay">
               <div>
                 
@@ -861,10 +864,7 @@
               </div>
             </div>
           </div>
-          <div class="video-audio-controls">
-            <button class="video-sound-btn" id="videoSoundToggle">🔇 Sound</button>
-            <input class="video-volume-slider" id="videoVolumeSlider" type="range" min="0" max="1" step="0.01" value="0">
-          </div>
+          
           <div class="video-note"></div>
         </div>
       </div>
@@ -1102,5 +1102,12 @@
       }
     });
   </script>
+
+<script>
+function openDiscord() {
+  window.location.href = "https://discord.gg/h6bH52eS5Z";
+}
+</script>
+
 </body>
 </html>
