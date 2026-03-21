@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TTT Loading Screen Clean</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg1:#060816;
+  --bg2:#0d1430;
+  --bg3:#17112f;
+  --text:#f5f7ff;
+  --muted:#b7c2e2;
+  --accent:#8b5cf6;
+  --accent2:#22d3ee;
+  --accent3:#ffd166;
+  --line:rgba(255,255,255,.12);
+  --shadow:0 24px 80px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  overflow:hidden;
+  font-family:'Inter',system-ui,sans-serif;
+  color:var(--text);
+  background:linear-gradient(135deg,var(--bg1),var(--bg2) 50%,var(--bg3));
+}
+
+.bg-slideshow,.overlay,.grid,.particles{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+}
+.bg-slideshow{z-index:0;overflow:hidden}
+.bg-slide{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  opacity:0;
+  transition:opacity 1.2s ease,transform 10s linear;
+  transform:scale(1.03);
+  filter:brightness(.38) saturate(1.06);
+}
+.bg-slide.active{
+  opacity:1;
+  transform:scale(1.08);
+}
+
+.overlay{
+  z-index:1;
+  background:
+    radial-gradient(circle at 15% 15%, rgba(139,92,246,.18), transparent 26%),
+    radial-gradient(circle at 85% 20%, rgba(34,211,238,.12), transparent 20%),
+    linear-gradient(135deg, rgba(6,8,22,.68), rgba(13,20,48,.48) 50%, rgba(23,17,47,.72));
+}
+
+.grid{
+  z-index:1;
+  background-image:
+    linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+  background-size:36px 36px;
+  mask-image:radial-gradient(circle at center, black 45%, transparent 90%);
+  opacity:.55;
+}
+
+.particles{z-index:1}
+.particles span{
+  position:absolute;
+  width:5px;
+  height:5px;
+  border-radius:999px;
+  background:rgba(255,255,255,.72);
+  box-shadow:0 0 12px rgba(255,255,255,.25);
+  animation:rise linear infinite;
+  opacity:.45;
+}
+@keyframes rise{
+  from{transform:translateY(12vh) scale(.7);opacity:0}
+  20%{opacity:.65}
+  to{transform:translateY(-110vh) scale(1.1);opacity:0}
+}
+
+.wrap{
+  position:relative;
+  z-index:2;
+  min-height:100%;
+  padding:28px;
+  display:grid;
+  grid-template-columns:1.1fr .9fr;
+  gap:22px;
+}
+
+.panel{
+  border:1px solid var(--line);
+  background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+  backdrop-filter:blur(16px);
+  border-radius:28px;
+  box-shadow:var(--shadow);
+}
+
+.left{
+  padding:34px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  min-height:calc(100vh - 56px);
+}
+
+.right{
+  padding:28px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:16px;
+  min-height:calc(100vh - 56px);
+}
+
+.badges{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-bottom:18px;
+}
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:9px 14px;
+  border-radius:999px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.10);
+  color:var(--muted);
+  font-size:13px;
+  font-weight:700;
+}
+.dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:var(--accent2);
+  box-shadow:0 0 0 0 rgba(34,211,238,.6);
+  animation:pulse 1.8s infinite;
+}
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(34,211,238,.6)}
+  70%{box-shadow:0 0 0 14px rgba(34,211,238,0)}
+  100%{box-shadow:0 0 0 0 rgba(34,211,238,0)}
+}
+
+h1{
+  margin:0 0 16px;
+  font-size:clamp(40px,5vw,72px);
+  line-height:.95;
+  letter-spacing:-.05em;
+  max-width:10ch;
+}
+.gradient{
+  background:linear-gradient(90deg,#fff 0%,#d8d6ff 38%,#9af7ff 72%,#ffe39a 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+
+.lead{
+  margin:0 0 22px;
+  color:var(--muted);
+  font-size:17px;
+  line-height:1.65;
+  max-width:58ch;
+}
+
+.features{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin:0 0 26px;
+}
+.feature{
+  padding:10px 14px;
+  border-radius:16px;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.08);
+  font-size:13px;
+  color:#eef2ff;
+}
+
+.loading-box{
+  padding:20px;
+  border-radius:22px;
+  background:rgba(8,12,24,.46);
+  border:1px solid rgba(255,255,255,.10);
+}
+.loading-head,.loading-sub{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:16px;
+  font-size:14px;
+}
+.loading-head{margin-bottom:12px}
+.loading-sub{margin-top:12px;color:var(--muted)}
+.progress-meta{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:16px;
+  color:var(--muted);
+  font-size:12px;
+  margin-top:10px;
+  flex-wrap:wrap;
+}
+.mini-pills{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+.mini-pill{
+  padding:6px 10px;
+  border-radius:999px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.08);
+}
+.bar{
+  height:16px;
+  width:100%;
+  border-radius:999px;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.08);
+  background:rgba(255,255,255,.07);
+}
+.bar-fill{
+  height:100%;
+  width:8%;
+  border-radius:inherit;
+  background:linear-gradient(90deg,var(--accent),var(--accent2),var(--accent3));
+  box-shadow:0 0 22px rgba(139,92,246,.38);
+  transition:width .9s cubic-bezier(.22,1,.36,1);
+}
+
+.sound-row{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-top:16px;
+  flex-wrap:wrap;
+}
+.sound-btn{
+  cursor:pointer;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(255,255,255,.08);
+  color:var(--text);
+  padding:11px 16px;
+  border-radius:999px;
+  font-weight:700;
+  font-size:14px;
+}
+.sound-btn.is-muted{opacity:.82}
+.eq{
+  display:inline-flex;
+  align-items:end;
+  gap:4px;
+  height:18px;
+}
+.eq span{
+  width:4px;
+  background:linear-gradient(180deg,var(--accent2),var(--accent3));
+  border-radius:999px 999px 0 0;
+  animation:equalize 1s ease-in-out infinite;
+  transform-origin:bottom;
+}
+.eq span:nth-child(1){height:8px;animation-delay:-.1s}
+.eq span:nth-child(2){height:15px;animation-delay:-.3s}
+.eq span:nth-child(3){height:11px;animation-delay:-.5s}
+.eq span:nth-child(4){height:17px;animation-delay:-.2s}
+.eq.is-muted span{
+  animation-play-state:paused!important;
+  opacity:.35;
+}
+@keyframes equalize{
+  0%,100%{transform:scaleY(.55);opacity:.8}
+  50%{transform:scaleY(1.15);opacity:1}
+}
+
+.server-card{
+  display:flex;
+  align-items:center;
+  gap:16px;
+  padding:18px;
+  border-radius:22px;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.08);
+}
+.logo{
+  width:78px;
+  height:78px;
+  border-radius:22px;
+  overflow:hidden;
+  flex:0 0 auto;
+  background:rgba(255,255,255,.08);
+  box-shadow:0 12px 28px rgba(0,0,0,.22);
+}
+.logo img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+.server-name{
+  margin:0;
+  font-size:28px;
+  font-weight:900;
+  line-height:1.02;
+}
+.server-sub{
+  margin-top:6px;
+  font-size:14px;
+  color:var(--muted);
+}
+
+.info-card,.rules-card{
+  padding:20px;
+  border-radius:22px;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.08);
+}
+.info-card h2,.rules-card h2{
+  margin:0 0 12px;
+  font-size:18px;
+}
+.info-card p{
+  margin:0;
+  font-size:14px;
+  line-height:1.6;
+  color:var(--muted);
+}
+.rule-list{
+  display:grid;
+  gap:10px;
+}
+.rule{
+  display:grid;
+  grid-template-columns:34px 1fr;
+  gap:12px;
+  align-items:start;
+}
+.rule-icon{
+  width:34px;
+  height:34px;
+  border-radius:12px;
+  display:grid;
+  place-items:center;
+  background:rgba(255,255,255,.08);
+}
+.rule strong{
+  display:block;
+  font-size:14px;
+  margin-bottom:3px;
+}
+.rule p{
+  margin:0;
+  font-size:13px;
+  color:var(--muted);
+  line-height:1.45;
+}
+
+.footer-note{
+  margin-top:18px;
+  font-size:13px;
+  color:var(--muted);
+}
+
+@media (max-width:1100px){
+  body{overflow:auto}
+  .wrap{grid-template-columns:1fr;padding:18px}
+  .left,.right{min-height:auto}
+}
+@media (max-width:620px){
+  .left,.right{padding:20px}
+  h1{max-width:none}
+}
+</style>
+</head>
+<body>
+<div class="bg-slideshow" id="bgSlideshow"></div>
+<div class="overlay"></div>
+<div class="grid"></div>
+<div class="particles" id="particles"></div>
+
+<main class="wrap">
+  <section class="panel left">
+    <div>
+      <div class="badges">
+        <div class="badge"><span class="dot"></span> GMod TTT</div>
+        <div class="badge">Live Join</div>
+        <div class="badge">Custom Content</div>
+      </div>
+
+      <h1>TTT Die Bwes<br><span class="gradient">lädt gerade rein.</span></h1>
+
+      <p class="lead">
+        Custom Messer, Minecraft-Waffen, Playermodels, eigener Minecraft-Skin, Maps, MAXWELL und der ganze wilde TTT-Kram.
+      </p>
+
+      <div class="features">
+        <div class="feature">🔪 Custom Messer</div>
+        <div class="feature">⛏️ Minecraft Waffen</div>
+        <div class="feature">🎭 Playermodels</div>
+        <div class="feature">🐱 MAXWELL</div>
+        <div class="feature">🗺️ Maps</div>
+        <div class="feature">🚗 Auto für Gs</div>
+      </div>
+
+      <div class="loading-box">
+        <div class="loading-head">
+          <span id="status">Verbindung zum Server wird aufgebaut…</span>
+          <span id="percent">7%</span>
+        </div>
+        <div class="bar"><div class="bar-fill" id="barFill"></div></div>
+        <div class="loading-sub">
+          <span id="tip">Tipp: Kein Random KOS, sonst Ersatzbank.</span>
+          <span id="phase">Phase: Serverkontakt</span>
+        </div>
+        <div class="progress-meta">
+          <span id="microStatus">Warte auf erste Serverdaten…</span>
+          <div class="mini-pills">
+            <span class="mini-pill" id="packets">Dateien: 0/0</span>
+            <span class="mini-pill" id="eta">ETA: --:--</span>
+          </div>
+        </div>
+
+        <div class="sound-row">
+          <button class="sound-btn" id="soundToggle" type="button">🔊 Sound an</button>
+          <div class="eq" id="equalizer" aria-hidden="true">
+            <span></span><span></span><span></span><span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-note">
+        TTT mit Chaos, Style und Ehrenkodex.
+      </div>
+    </div>
+  </section>
+
+  <aside class="panel right">
+    <div class="server-card">
+      <div class="logo"><img src="cat.png" alt="Katzenlogo"></div>
+      <div>
+        <p class="server-name">TTT Die Bwes</p>
+        <div class="server-sub" id="serverSub">Mehr Glow, smarter Fortschritt, mehr Aura pro Pixel</div>
+      </div>
+    </div>
+
+    <div class="info-card">
+      <h2>Was dich erwartet</h2>
+      <p id="showcaseCopy">MAXWELL, Custom Waffen, Maps und genug Chaos für eine stabile Runde TTT ohne unnötigen Bildschirm-Spam.</p>
+    </div>
+
+    <div class="rules-card">
+      <h2>Basics</h2>
+      <div class="rule-list">
+        <div class="rule">
+          <div class="rule-icon">👀</div>
+          <div>
+            <strong>Kein Random KOS</strong>
+            <p>Ohne Grund auf Sicht schießen ist nicht drin.</p>
+          </div>
+        </div>
+        <div class="rule">
+          <div class="rule-icon">💥</div>
+          <div>
+            <strong>Kein RDM</strong>
+            <p>Random Deathmatch bleibt draußen.</p>
+          </div>
+        </div>
+        <div class="rule">
+          <div class="rule-icon">⚠️</div>
+          <div>
+            <strong>Unschuldige nicht trollen</strong>
+            <p>Spiel entspannt und zerstör die Runde nicht.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+</main>
+
+<audio id="bgm" autoplay loop preload="auto">
+  <source src="sound.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+const particles = document.getElementById('particles');
+for (let i = 0; i < 18; i++) {
+  const p = document.createElement('span');
+  p.style.left = Math.random() * 100 + 'vw';
+  p.style.bottom = (-10 - Math.random() * 90) + 'px';
+  p.style.animationDuration = (9 + Math.random() * 12) + 's';
+  p.style.animationDelay = (-Math.random() * 18) + 's';
+  p.style.opacity = (0.2 + Math.random() * 0.35).toFixed(2);
+  p.style.transform = `scale(${0.7 + Math.random() * 0.6})`;
+  particles.appendChild(p);
+}
+
+const bgSlideshow = document.getElementById('bgSlideshow');
+const candidateSets = [
+  ['bg1.jpg','bg2.jpg','bg3.jpg','bg4.jpg'],
+  ['bg1.jpeg','bg2.jpeg','bg3.jpeg','bg4.jpeg'],
+  ['bg1.png','bg2.png','bg3.png','bg4.png'],
+  ['bg1.webp','bg2.webp','bg3.webp','bg4.webp'],
+  ['bg1.JPG','bg2.JPG','bg3.JPG','bg4.JPG'],
+  ['bg1.JPEG','bg2.JPEG','bg3.JPEG','bg4.JPEG'],
+  ['bg1.PNG','bg2.PNG','bg3.PNG','bg4.PNG'],
+  ['bg1.WEBP','bg2.WEBP','bg3.WEBP','bg4.WEBP']
+];
+let slides = [];
+let currentSlide = 0;
+let slideTimer = null;
+
+function preloadImage(src) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(src);
+    img.onerror = () => reject(src);
+    img.src = src;
+  });
+}
+
+async function detectBackgrounds() {
+  for (const set of candidateSets) {
+    const results = await Promise.allSettled(set.map(preloadImage));
+    const valid = results
+      .filter(result => result.status === 'fulfilled')
+      .map(result => result.value);
+    if (valid.length > 0) return valid;
+  }
+  return [];
+}
+
+function mountSlides(imageList) {
+  bgSlideshow.innerHTML = '';
+  slides = imageList.map((src, index) => {
+    const img = document.createElement('img');
+    img.className = 'bg-slide' + (index === 0 ? ' active' : '');
+    img.src = src;
+    img.alt = '';
+    bgSlideshow.appendChild(img);
+    return img;
+  });
+}
+
+function showSlide(index){
+  slides.forEach((slide, i) => slide.classList.toggle('active', i === index));
+}
+
+function nextSlide(){
+  if(slides.length <= 1) return;
+  currentSlide = (currentSlide + 1) % slides.length;
+  showSlide(currentSlide);
+}
+
+async function initBackgrounds() {
+  const imageList = await detectBackgrounds();
+  if (!imageList.length) return;
+  mountSlides(imageList);
+  showSlide(0);
+  if (slideTimer) clearInterval(slideTimer);
+  if (imageList.length > 1) {
+    slideTimer = setInterval(nextSlide, 10000);
+  }
+}
+
+initBackgrounds();
+
+const tips = [
+  'Tipp: Kein Random KOS, sonst Ersatzbank.',
+  'Tipp: RDM bleibt draußen.',
+  'Tipp: MAXWELL beobachtet alles.',
+  'Tipp: Wahre Gs kennen den Ehrenkodex.'
+];
+
+const showcases = [
+  'MAXWELL, Custom Waffen, Maps und genug Chaos für eine stabile Runde TTT ohne unnötigen Bildschirm-Spam.',
+  'Custom Messer und Minecraft-Waffen bringen den extra Vibe in jede Runde.',
+  'Playermodels, Skins und Maps machen jede Runde etwas wilder.',
+  'Cleanes Layout, damit du alles Wichtige sofort siehst.'
+];
+
+const progressPlan = [
+  { until:12, phase:'Phase: Serverkontakt', status:'Serverkontakt wird aufgebaut…', micro:'Erste Verbindung steht.', packet:[0,9], eta:'00:28' },
+  { until:32, phase:'Phase: Assets syncen', status:'Dateien werden geladen…', micro:'Die ersten Inhalte kommen rein.', packet:[2,9], eta:'00:20' },
+  { until:58, phase:'Phase: Content laden', status:'Waffen, Models und Maps werden vorbereitet…', micro:'Der größte Teil läuft gerade rein.', packet:[5,9], eta:'00:12' },
+  { until:84, phase:'Phase: Fast fertig', status:'Letzte Inhalte werden finalisiert…', micro:'Nur noch ein paar Schritte.', packet:[8,9], eta:'00:05' },
+  { until:100, phase:'Phase: Join bereit', status:'Fast drin…', micro:'Die letzten Prozente laufen.', packet:[9,9], eta:'00:01' }
+];
+
+const statusEl = document.getElementById('status');
+const phaseEl = document.getElementById('phase');
+const percentEl = document.getElementById('percent');
+const tipEl = document.getElementById('tip');
+const microStatusEl = document.getElementById('microStatus');
+const packetsEl = document.getElementById('packets');
+const etaEl = document.getElementById('eta');
+const barFillEl = document.getElementById('barFill');
+const showcaseCopyEl = document.getElementById('showcaseCopy');
+const serverSubEl = document.getElementById('serverSub');
+const audio = document.getElementById('bgm');
+const soundToggle = document.getElementById('soundToggle');
+const equalizer = document.getElementById('equalizer');
+
+let tipIdx = 0;
+let showcaseIdx = 0;
+let progress = 7;
+let filesNeeded = 0;
+let filesTotal = 0;
+let autoProgressEnabled = true;
+
+function clamp(value, min, max){
+  return Math.min(max, Math.max(min, value));
+}
+function getStage(value){
+  return progressPlan.find(stage => value <= stage.until) || progressPlan[progressPlan.length - 1];
+}
+function formatEtaFromProgress(current){
+  const remaining = Math.max(0, 100 - current);
+  const seconds = Math.ceil(remaining * 0.28);
+  const mm = String(Math.floor(seconds / 60)).padStart(2, '0');
+  const ss = String(seconds % 60).padStart(2, '0');
+  return `${mm}:${ss}`;
+}
+function updateProgressUI(value){
+  const safeValue = clamp(Number(value) || 0, 0, 100);
+  const stage = getStage(safeValue);
+  percentEl.textContent = `${Math.round(safeValue)}%`;
+  statusEl.textContent = stage.status;
+  phaseEl.textContent = stage.phase;
+  packetsEl.textContent = filesTotal > 0
+    ? `Dateien: ${String(filesNeeded).padStart(2,'0')}/${String(filesTotal).padStart(2,'0')}`
+    : `Dateien: ${String(stage.packet[0]).padStart(2,'0')}/${String(stage.packet[1]).padStart(2,'0')}`;
+  etaEl.textContent = `ETA: ${filesTotal > 0 ? formatEtaFromProgress(safeValue) : stage.eta}`;
+  microStatusEl.textContent = stage.micro;
+  barFillEl.style.width = `${Math.max(6, safeValue)}%`;
+}
+function smartStep(value){
+  if (value < 12) return 0.7 + Math.random() * 0.45;
+  if (value < 32) return 1.2 + Math.random() * 0.7;
+  if (value < 58) return 1.6 + Math.random() * 0.8;
+  if (value < 84) return 0.85 + Math.random() * 0.45;
+  if (value < 99) return 0.15 + Math.random() * 0.16;
+  return 0;
+}
+
+function updateSoundUI(){
+  if(!audio) return;
+  const muted = audio.muted || Number(audio.volume) === 0;
+  soundToggle.textContent = muted ? '🔇 Sound aus' : '🔊 Sound an';
+  soundToggle.classList.toggle('is-muted', muted);
+  equalizer.classList.toggle('is-muted', muted);
+}
+function tryPlay(){
+  if(!audio) return;
+  audio.volume = 0.3;
+  const playPromise = audio.play();
+  if (playPromise && typeof playPromise.then === 'function') {
+    playPromise.then(updateSoundUI).catch(updateSoundUI);
+  } else {
+    updateSoundUI();
+  }
+}
+function toggleMute(){
+  if(!audio) return;
+  audio.muted = !audio.muted;
+  updateSoundUI();
+  if(!audio.muted) tryPlay();
+}
+
+updateProgressUI(progress);
+updateSoundUI();
+window.addEventListener('load', tryPlay);
+
+setInterval(() => {
+  if (autoProgressEnabled && progress < 99) {
+    progress = Math.min(99, progress + smartStep(progress));
+    updateProgressUI(progress);
+  }
+}, 900);
+
+setInterval(() => {
+  tipIdx = (tipIdx + 1) % tips.length;
+  tipEl.textContent = tips[tipIdx];
+}, 3500);
+
+setInterval(() => {
+  showcaseIdx = (showcaseIdx + 1) % showcases.length;
+  showcaseCopyEl.textContent = showcases[showcaseIdx];
+}, 4500);
+
+if(soundToggle){
+  soundToggle.addEventListener('click', toggleMute);
+}
+if(audio){
+  audio.addEventListener('volumechange', updateSoundUI);
+  audio.addEventListener('play', updateSoundUI);
+  audio.addEventListener('pause', updateSoundUI);
+}
+
+function GameDetails(servername, serverurl, mapname, maxplayers, steamid, gamemode){
+  if(servername){
+    const title = document.querySelector('.server-name');
+    if(title) title.innerHTML = String(servername).replace(/\n/g, '<br>');
+  }
+  const parts = [];
+  if(gamemode) parts.push(String(gamemode).toUpperCase());
+  if(mapname) parts.push('Map: ' + mapname);
+  if(maxplayers) parts.push('Slots: ' + maxplayers);
+  if(parts.length) serverSubEl.textContent = parts.join(' • ');
+  autoProgressEnabled = false;
+  progress = Math.max(progress, 10);
+  statusEl.textContent = 'Serverdetails empfangen…';
+  microStatusEl.textContent = 'Server meldet sich mit echten Daten zurück.';
+  updateProgressUI(progress);
+}
+
+function SetStatusChanged(status){
+  if(typeof status === 'string' && status.trim()){
+    statusEl.textContent = status;
+    microStatusEl.textContent = status;
+  }
+}
+
+function SetFilesNeeded(needed){
+  autoProgressEnabled = false;
+  filesNeeded = Math.max(0, parseInt(needed, 10) || 0);
+  if(filesTotal <= 0) filesTotal = Math.max(filesNeeded, 1);
+  const calculated = filesTotal > 0 ? ((filesTotal - filesNeeded) / filesTotal) * 100 : progress;
+  progress = clamp(Math.max(progress, calculated), 0, 100);
+  updateProgressUI(progress);
+}
+
+function SetFilesTotal(total){
+  autoProgressEnabled = false;
+  filesTotal = Math.max(0, parseInt(total, 10) || 0);
+  if(filesNeeded > filesTotal && filesTotal > 0) filesNeeded = filesTotal;
+  const calculated = filesTotal > 0 ? ((filesTotal - filesNeeded) / filesTotal) * 100 : progress;
+  progress = clamp(Math.max(progress, calculated), 0, 100);
+  updateProgressUI(progress);
+}
+
+function SetProgress(value){
+  autoProgressEnabled = false;
+  const numeric = parseFloat(value);
+  if(!isNaN(numeric)){
+    progress = numeric <= 1 ? numeric * 100 : numeric;
+    progress = clamp(progress, 0, 100);
+    updateProgressUI(progress);
+  }
+}
+
+function DownloadingFile(filename){
+  autoProgressEnabled = false;
+  if(filename) microStatusEl.textContent = 'Lädt: ' + filename;
+  if(filesTotal > 0 && filesNeeded > 0){
+    const downloaded = filesTotal - filesNeeded;
+    progress = clamp((downloaded / filesTotal) * 100, 0, 100);
+    updateProgressUI(progress);
+  }
+}
+</script>
+</body>
+</html>
